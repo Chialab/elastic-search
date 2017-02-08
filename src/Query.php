@@ -116,6 +116,7 @@ class Query implements IteratorAggregate
             $fields = array_merge($this->_queryParts['fields'], $fields);
         }
         $this->_queryParts['fields'] = $fields;
+
         return $this;
     }
 
@@ -129,6 +130,7 @@ class Query implements IteratorAggregate
     public function limit($limit)
     {
         $this->_queryParts['limit'] = (int)$limit;
+
         return $this;
     }
 
@@ -142,6 +144,7 @@ class Query implements IteratorAggregate
     public function offset($num)
     {
         $this->_queryParts['offset'] = (int)$num;
+
         return $this;
     }
 
@@ -174,6 +177,7 @@ class Query implements IteratorAggregate
             $offset = PHP_INT_MAX;
         }
         $this->offset((int)$offset);
+
         return $this;
     }
 
@@ -222,9 +226,11 @@ class Query implements IteratorAggregate
         if (is_array($order) && is_numeric(key($order))) {
             if ($overwrite) {
                 $this->_queryParts['order'] = $order;
+
                 return $this;
             }
             $this->_queryParts['order'] = array_merge($order, $this->_queryParts['order']);
+
             return $this;
         }
 
@@ -237,6 +243,7 @@ class Query implements IteratorAggregate
             if (is_string($order)) {
                 return [$key => ['order' => $order]];
             }
+
             return [$key => $order];
         };
 
@@ -247,6 +254,7 @@ class Query implements IteratorAggregate
         }
 
         $this->_queryParts['order'] = $order;
+
         return $this;
     }
 
@@ -352,6 +360,7 @@ class Query implements IteratorAggregate
     public function setFullQuery(AbstractQuery $query)
     {
         $this->_queryParts['query'] = $query;
+
         return $this;
     }
 
@@ -387,6 +396,7 @@ class Query implements IteratorAggregate
         }
 
         $this->_searchOptions = $options;
+
         return $this;
     }
 
@@ -408,6 +418,7 @@ class Query implements IteratorAggregate
 
         if ($conditions instanceof AbstractQuery) {
             $this->_queryParts[$partType]->{$type}($conditions);
+
             return $this;
         }
 
@@ -422,10 +433,12 @@ class Query implements IteratorAggregate
         if (is_array($conditions)) {
             $conditions = (new QueryBuilder)->parse($conditions);
             array_map([$this->_queryParts[$partType], $type], $conditions);
+
             return $this;
         }
 
         $this->_queryParts[$partType]->{$type}($conditions);
+
         return $this;
     }
 
@@ -496,6 +509,7 @@ class Query implements IteratorAggregate
     public function highlight(array $highlight)
     {
         $this->_queryParts['highlight'] = $highlight;
+
         return $this;
     }
 
@@ -509,6 +523,7 @@ class Query implements IteratorAggregate
     public function withMinScore($score)
     {
         $this->_elasticQuery->setMinScore($score);
+
         return $this;
     }
 
@@ -524,6 +539,7 @@ class Query implements IteratorAggregate
         $type = $connection->getIndex()->getType($name);
 
         $query = $this->compileQuery();
+
         return new ResultSet($type->search($query, $this->_searchOptions), $this);
     }
 
